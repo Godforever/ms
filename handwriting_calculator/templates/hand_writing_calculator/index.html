@@ -19,8 +19,21 @@
                 var context = box.getContext('2d');
                 var imgData = context.getImageData(0, 0, 1000, 200).data;
                 $.post('get_result', {"img_data": imgData.toLocaleString()}, function (json, textStatus) {
-                    alert(json["status"])
+                    $("#result").text(json["status"])
                 });
+            })
+        });
+    </script>
+
+    <script>
+        $(function () {
+            $("#clear").click(function (event) {
+                var box = document.getElementById('box');
+                var context = box.getContext('2d');
+                context.fillStyle = "#ffffff";
+                context.beginPath();
+                context.fillRect(0, 0, box.width, box.height);
+                context.closePath();
             })
         });
     </script>
@@ -31,25 +44,28 @@
 <canvas id="box" width="1000" height="200"></canvas>
 <br>
 <button type="button" id="submit">SUBMIT</button>
+<button type="button" id="clear">CLEAR</button>
 <script type="text/javascript">
-        var box = document.getElementById('box');
-        var oc = box.getContext('2d');
-        box.onmousedown = function (e) {
-            e = e || window.event;
-            var ox = e.clientX - box.offsetLeft;
-            var oy = e.clientY - box.offsetTop;
-            oc.moveTo(ox, oy);
-            document.onmousemove = function (e) {
-                var ox1 = e.clientX - box.offsetLeft;
-                var oy1 = e.clientY - box.offsetTop;
-                oc.lineTo(ox1, oy1);
-                oc.stroke();
-                oc.strokeStyle = 'black';
-            };
-            document.onmouseup = function () {
-                document.onmousemove = document.onmouseup = null;
-            };
-        }
-    </script>
+    var box = document.getElementById('box');
+    var oc = box.getContext('2d');
+    box.onmousedown = function (e) {
+        e = e || window.event;
+        var ox = e.clientX - box.offsetLeft;
+        var oy = e.clientY - box.offsetTop;
+        oc.moveTo(ox, oy);
+        document.onmousemove = function (e) {
+            var ox1 = e.clientX - box.offsetLeft;
+            var oy1 = e.clientY - box.offsetTop;
+            oc.lineTo(ox1, oy1);
+            oc.stroke();
+            oc.strokeStyle = 'black';
+        };
+        document.onmouseup = function () {
+            document.onmousemove = document.onmouseup = null;
+        };
+    }
+</script>
+<br><br>
+<div id="result"></div>
 </body>
 </html>

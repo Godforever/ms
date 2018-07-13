@@ -18,8 +18,6 @@ def main_page(request):
 def get_result(request):
     img_str = request.POST["img_data"]
     img_arr = np.array(img_str.split(',')).reshape(4, 1000, 200)
-
-    # TODO: evaluate the image
     img = (img_arr[0] + img_arr[1] + img_arr[2]) / 3
     image_cuts = get_image_cuts(img, data_needed=True)
     equation = ''
@@ -28,5 +26,4 @@ def get_result(request):
         equation += SYMBOL[predict]
 
     result = calculate(equation)
-
-    return JsonResponse({"status": "Not implemented"}, safe=False)
+    return JsonResponse({"status": "{} = {}".format(equation, result)}, safe=False)
