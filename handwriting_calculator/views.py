@@ -2,12 +2,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 import numpy as np
-from .utils.cnn_model import *
-from .utils.image_processing import *
-from .utils.calculator import *
-
-cnn_model = model()
-cnn_model.load_model('', '')
+from PIL import Image
 
 
 def main_page(request):
@@ -17,13 +12,12 @@ def main_page(request):
 @csrf_exempt
 def get_result(request):
     img_str = request.POST["img_data"]
-    img_arr = np.array(img_str.split(',')).reshape(4, 1000, 200)
-    img = (img_arr[0] + img_arr[1] + img_arr[2]) / 3
-    image_cuts = get_image_cuts(img, data_needed=True)
-    equation = ''
-    for image in image_cuts:
-        predict = cnn_model.predict(image)
-        equation += SYMBOL[predict]
+    img_arr = np.array(img_str.split(',')).reshape(200, 1000, 4).astype(np.uint8)
+    binary_img_arr = img_arr[:, :, 3]
+    save_img(binary_img_arr, "./target.png")
+    return JsonResponse({"status": "Not Implemented!"}, safe=False)
 
-    result = calculate(equation)
-    return JsonResponse({"status": "{} = {}".format(equation, result)}, safe=False)
+
+def save_img(img_arr: np.ndarray, file_path: str) -> None:
+    img = Image.fromarray(img_arr, 'L')
+    img.save(file_path)
