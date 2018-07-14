@@ -47,23 +47,21 @@ def get_x_y_cuts(data, n_lines=1):
         pr_item = cuts[0]
         count = 1
         len_cuts = len(cuts)
-        new_cuts = cuts.copy()
-        for i in range(len_cuts - 1):
-            now_item = cuts[count]
+        new_cuts = [cuts[0]]
+        pr_k = 0
+        for i in range(1, len_cuts):
+            pr_item = new_cuts[pr_k]
+            now_item = cuts[i]
             if not (now_item[2] > pr_item[3]):
-                new_cuts.remove(pr_item)
-                new_cuts.remove(now_item)
-                pr_item[0] = min(pr_item[0], now_item[0])
-                pr_item[1] = max(pr_item[1], now_item[1])
-                pr_item[2] = min(pr_item[2], now_item[2])
-                pr_item[3] = max(pr_item[3], now_item[3])
-                new_cuts.append(pr_item)
+                new_cuts[pr_k][0] = min(pr_item[0], now_item[0])
+                new_cuts[pr_k][1] = max(pr_item[1], now_item[1])
+                new_cuts[pr_k][2] = min(pr_item[2], now_item[2])
+                new_cuts[pr_k][3] = max(pr_item[3], now_item[3])
             else:
-                pr_item = now_item
-            count += 1
+                new_cuts.append(now_item)
+                pr_k += 1
         cuts = new_cuts
     return cuts
-
 
 def get_image_cuts(image, dir=None, is_data=False, n_lines=1, data_needed=False, count=0):
     if is_data:

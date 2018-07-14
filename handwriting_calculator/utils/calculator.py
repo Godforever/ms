@@ -49,47 +49,56 @@ def deal_data():
     data_stack.append(result)
     return result
 
-
 def calculate(equation):
-    while equation:
-        cur = re.search(r"((^\d+\.?\d*)|(^\(\-\d+\.?\d*)|\(|\)|\+|\-|\*|/)", equation).group()
-        print(cur)
-        if "(-" in cur:
-            bracket = cur[0]
-            operator_stack.append(bracket)
-            equation = equation[1:]
-            num = cur[1:]
-            data_stack.append(num)
-            equation = equation[len(num):]
+    global data_stack
+    global operator_stack
+    try:
+        while equation:
+            cur = re.search(r"((^\d+\.?\d*)|(^\(\-\d+\.?\d*)|\(|\)|\+|\-|\*|/)", equation).group()
+            if "(-" in cur:
+                bracket = cur[0]
+                operator_stack.append(bracket)
+                equation = equation[1:]
+                num = cur[1:]
+                data_stack.append(num)
+                equation = equation[len(num):]
 
-        else:
-            lenth = len(cur)
-            if is_number(cur):
-                data_stack.append(cur)
-            elif cur == ")":
-                if operator_stack[-1] == "(":
-                    operator_stack.pop()
-                else:
-                    deal_data()
-                    while operator_stack[-1] != "(":
-                        deal_data()
-                    operator_stack.pop()
             else:
-                if not (operator_stack):
-                    operator_stack.append(cur)
+                lenth = len(cur)
+                if is_number(cur):
+                    data_stack.append(cur)
+                elif cur == ")":
+                    if operator_stack[-1] == "(":
+                        operator_stack.pop()
+                    else:
+                        if operator_stack:
+                            data_stack = []
+                            operator_stack = []
+                            return '?'
+                        deal_data()
+                        while operator_stack[-1] != "(":
+                            deal_data()
+                        operator_stack.pop()
                 else:
-                    if weight[cur] > weight[operator_stack[-1]]:
+                    if not (operator_stack):
                         operator_stack.append(cur)
                     else:
-                        if operator_stack[-1] == "(":
+                        if weight[cur] > weight[operator_stack[-1]]:
                             operator_stack.append(cur)
                         else:
-                            deal_data()
-                            while operator_stack and weight[cur] == weight[operator_stack[-1]]:
+                            if operator_stack[-1] == "(":
+                                operator_stack.append(cur)
+                            else:
                                 deal_data()
-                            operator_stack.append(cur)
-            equation = equation[lenth:]
-    result = deal_data()
-    while operator_stack:
+                                while operator_stack and weight[cur] == weight[operator_stack[-1]]:
+                                    deal_data()
+                                operator_stack.append(cur)
+                equation = equation[lenth:]
         result = deal_data()
-    return result
+        while operator_stack:
+            result = deal_data()
+        return result
+    except (KeyError,IndexError):
+        data_stack = []
+        operator_stack = []
+        return '?'
