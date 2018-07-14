@@ -17,7 +17,7 @@
             $("#submit").click(function (event) {
                 var box = document.getElementById('box');
                 var context = box.getContext('2d');
-                var imgData = context.getImageData(0, 0, 1000, 200).data;
+                var imgData = context.getImageData(0, 0, box.width, box.height).data;
                 $.post('get_result', {"img_data": imgData.toLocaleString()}, function (json, textStatus) {
                     $("#result").text(json["status"])
                 });
@@ -30,7 +30,7 @@
             $("#clear").click(function (event) {
                 var box = document.getElementById('box');
                 var context = box.getContext('2d');
-                context.fillStyle = "#ffffff";
+                context.fillStyle = "#000000";
                 context.beginPath();
                 context.fillRect(0, 0, box.width, box.height);
                 context.closePath();
@@ -41,13 +41,14 @@
 <body>
 
 <h1>Handwriting Calculator</h1>
-<canvas id="box" width="1000" height="200"></canvas>
+<canvas id="box" width="1000" height="200" style="background: black"></canvas>
 <br>
 <button type="button" id="submit">SUBMIT</button>
 <button type="button" id="clear">CLEAR</button>
 <script type="text/javascript">
     var box = document.getElementById('box');
     var oc = box.getContext('2d');
+    oc.lineWidth = 4;
     box.onmousedown = function (e) {
         e = e || window.event;
         var ox = e.clientX - box.offsetLeft;
@@ -58,7 +59,7 @@
             var oy1 = e.clientY - box.offsetTop;
             oc.lineTo(ox1, oy1);
             oc.stroke();
-            oc.strokeStyle = 'black';
+            oc.strokeStyle = 'white';
         };
         document.onmouseup = function () {
             document.onmousemove = document.onmouseup = null;
