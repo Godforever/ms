@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
-
+##定义新的工具类
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'', include('handwriting_calculator.urls')),

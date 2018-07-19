@@ -31,7 +31,7 @@ def get_x_y_cuts(data, n_lines=1):
                         continue
                     visited.add((x_c, y_c))
                     try:
-                        if data[x_c][y_c] < 200:
+                        if data[x_c][y_c] < 200:##如果小于200
                             q.put((x_c, y_c))
                             x_axis.append(x_c)
                             y_axis.append(y_c)
