@@ -1,6 +1,6 @@
 import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
-from .image_processing import *
+from image_processing import *
 from sklearn.model_selection import StratifiedShuffleSplit
 import os
 
