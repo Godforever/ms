@@ -3,7 +3,7 @@ from tensorflow.examples.tutorials.mnist import input_data
 from .image_processing import *
 from sklearn.model_selection import StratifiedShuffleSplit
 import os
-
+from tqdm import tqdm
 SYMBOL = {0: '0',
           1: '1',
           2: '2',
@@ -121,7 +121,7 @@ class model(object):
         predict_op = tf.argmax(prediction, 1, name="predict_op")
 
         loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits_v2(labels=y, logits=prediction))
-        loss_re = loss + regula_coef * regularizers
+        loss_re = loss + regular_coef * regularizers
 
         train_step = tf.train.AdamOptimizer(learning_rate).minimize(loss_re)
 
